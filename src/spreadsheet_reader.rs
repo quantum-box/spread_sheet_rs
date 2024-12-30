@@ -3,6 +3,7 @@ use crate::response::Response;
 use crate::SheetsClient;
 
 /// SpreadsheetReader: シートからデータを読み取るコンポーネント
+#[allow(dead_code)]
 pub struct SpreadsheetReader {
     // Note: このフィールドは実際のAPI実装時に使用予定
     client: SheetsClient,
