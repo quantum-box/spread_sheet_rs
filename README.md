@@ -229,26 +229,42 @@ SheetsClient --> [Sheets API] : interacts with
   - メモリ使用量の最適化
   - リクエスト数の最適化
 
+## 開発環境のセットアップ
+
+### テスト用スプレッドシート
+
+開発とテストのために、以下のテスト用スプレッドシートが用意されています：
+
+- スプレッドシートURL: https://docs.google.com/spreadsheets/d/1OU4eEeDargcZTPaW7O5FNYE_vyrUQRysGCVYzAiOChQ/edit?usp=sharing
+- 用途: SDKの開発時の動作確認およびテストケース実行
+- アクセス権限: 開発者に対して閲覧・編集権限が付与されています
+- 注意事項: このスプレッドシートはテスト用です。実際のプロダクションデータを含まないようにしてください
+
+### 認証情報の設定
+
+1. `GOOGLE_CRED`環境変数にサービスアカウントの認証情報（JSON形式）を設定します
+2. テスト実行時は、この環境変数が正しく設定されていることを確認してください
+
 ## PRごとの実装計画
 
-### PR#1: 基本設定とコア認証機能
-- 📝 Google Cloud Projectの設定
+### PR#1: 基本設定とコア認証機能 (済)
+- ✅ Google Cloud Projectの設定
   - Google Cloud Projectの作成
   - Google Sheets APIの有効化
   - 認証情報の作成
-- 📝 `Authenticator`の基本実装
+- ✅ `Authenticator`の基本実装
   - APIキー認証の実装
   - OAuth 2.0認証フローの実装
-- 📝 基本的なエラー型の定義
-- 📝 認証に関する単体テスト
+- ✅ 基本的なエラー型の定義
+- ✅ 認証に関する単体テスト
 
-### PR#2: 基本的なシートクライアント実装
-- 📝 `SheetsClient`の基本実装
+### PR#2: 基本的なシートクライアント実装 (実装中)
+- 🔄 `SheetsClient`の基本実装
   - HTTP クライアントの実装
   - 基本的なAPI エンドポイントの定義
-- 📝 `Response`構造体の実装
-- 📝 基本的なエラーハンドリング
-- 📝 クライアントの単体テスト
+- 🔄 `Response`構造体の実装
+- 🔄 基本的なエラーハンドリング
+- 🔄 クライアントの単体テスト
 
 ### PR#3: 読み込み機能の実装
 - 📝 `SpreadsheetReader`の基本実装

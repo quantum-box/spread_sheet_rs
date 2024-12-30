@@ -1,0 +1,50 @@
+name: Rust CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: 単体テスト
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+      - name: 認証情報の設定（mainブランチのみ）
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "$GOOGLE_CRED" > google-credential.json
+        env:
+          GOOGLE_CRED: ${{ secrets.GOOGLE_CRED }}
+      - name: 単体テストの実行
+        if: github.ref == 'refs/heads/main'
+        run: cargo test --lib --verbose
+        env:
+          GOOGLE_CRED: ${{ secrets.GOOGLE_CRED }}
+      - name: 認証なしでの単体テスト実行（main以外のブランチ）
+        if: github.ref != 'refs/heads/main'
+        run: cargo test --lib --verbose
+
+  lint:
+    name: コード品質チェック
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      
+      - name: フォーマットチェック
+        run: cargo fmt --all -- --check
+      
+      - name: Clippy
+        run: cargo clippy -- -D warnings
+      
+      - name: コンパイルチェック
+        run: cargo check --all-targets
