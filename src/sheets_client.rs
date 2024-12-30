@@ -1,5 +1,6 @@
 use crate::authenticator::Authenticator;
 use crate::error::Error;
+use crate::response::Response;
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION};
 
 /// SheetsClient: Google Sheets APIへのHTTPリクエストを管理
@@ -16,7 +17,13 @@ impl SheetsClient {
         }
     }
 
-    pub async fn ping_api(&self) -> Result<String, Error> {
+    pub async fn ping_api(&self) -> Result<Response<String>, Error> {
+        self.get("https://sheets.googleapis.com/$discovery/rest?version=v4")
+            .await
+    }
+
+    /// 指定されたURLにGETリクエストを送信し、認証付きでデータを取得
+    pub async fn get(&self, url: &str) -> Result<Response<String>, Error> {
         let token = self.authenticator.get_token().await?;
         let mut headers = HeaderMap::new();
         headers.insert(
@@ -25,24 +32,29 @@ impl SheetsClient {
                 .map_err(|e| Error::ApiError(format!("Invalid token format: {}", e)))?,
         );
 
-        // Discovery APIエンドポイントを使用して疎通確認
         let response = self
             .client
-            .get("https://sheets.googleapis.com/$discovery/rest?version=v4")
+            .get(url)
             .headers(headers)
             .send()
             .await
             .map_err(|e| Error::NetworkError(format!("Failed to send request: {}", e)))?;
 
-        if response.status().is_success() {
-            Ok("pong".to_string())
-        } else {
-            Err(Error::ApiError(format!(
-                "HTTP Error: {} - {}",
-                response.status(),
-                response.text().await.unwrap_or_default()
-            )))
-        }
+        let status = response.status();
+        let body = response
+            .text()
+            .await
+            .map_err(|e| Error::NetworkError(format!("Failed to read response body: {}", e)))?;
+
+        Ok(Response {
+            is_success: status.is_success(),
+            data: Some(body),
+            error: if status.is_success() {
+                None
+            } else {
+                Some(format!("HTTP Error: {}", status))
+            },
+        })
     }
 }
 

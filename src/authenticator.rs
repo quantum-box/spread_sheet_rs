@@ -84,7 +84,10 @@ impl Authenticator {
                 Error::AuthenticationError(format!("Failed to create authenticator: {}", e))
             })?;
 
-        let scopes = &["https://www.googleapis.com/auth/spreadsheets"];
+        let scopes = &[
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive.readonly",
+        ];
         let token = auth
             .token(scopes)
             .await
