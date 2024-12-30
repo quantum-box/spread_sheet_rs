@@ -59,6 +59,24 @@ impl Authenticator {
         self.service_account.is_some()
     }
 
+    pub fn from_env() -> Result<Self, Error> {
+        let cred_string = std::env::var("GOOGLE_CRED").map_err(|_| {
+            Error::AuthenticationError("GOOGLE_CRED環境変数が設定されていません".to_string())
+        })?;
+
+        let creds: ServiceAccountCreds = serde_json::from_str(&cred_string).map_err(|e| {
+            Error::AuthenticationError(format!(
+                "環境変数から認証情報JSONのパースに失敗しました: {}",
+                e
+            ))
+        })?;
+
+        Ok(Self {
+            api_key: None,
+            service_account: Some(creds),
+        })
+    }
+
     pub async fn get_token(&self) -> Result<String, Error> {
         let creds = self.service_account.as_ref().ok_or_else(|| {
             Error::AuthenticationError("No service account credentials available.".to_string())

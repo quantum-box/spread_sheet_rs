@@ -5,17 +5,28 @@ use std::path::Path;
 async fn main() -> Result<(), Error> {
     println!("サービスアカウント認証の検証を開始します...");
 
-    // サービスアカウントの認証情報を読み込み
-    let creds_path = Path::new("google-credential.json");
-    println!("1. 認証情報ファイルの検証:");
-    let authenticator = match Authenticator::from_service_account_file(creds_path) {
+    // サービスアカウントの認証情報を読み込み（環境変数またはファイルから）
+    println!("1. 認証情報の検証:");
+    let authenticator = match Authenticator::from_env() {
         Ok(auth) => {
-            println!("  ✓ 認証情報ファイルの読み込みに成功しました");
+            println!("  ✓ 環境変数からの認証情報の読み込みに成功しました");
             auth
         }
-        Err(e) => {
-            println!("  ✗ 認証情報ファイルの読み込みに失敗しました: {}", e);
-            return Err(e);
+        Err(_) => {
+            println!(
+                "  ! 環境変数GOOGLE_CREDが設定されていないため、ファイルから読み込みを試みます"
+            );
+            let creds_path = Path::new("google-credential.json");
+            match Authenticator::from_service_account_file(creds_path) {
+                Ok(auth) => {
+                    println!("  ✓ 認証情報ファイルの読み込みに成功しました");
+                    auth
+                }
+                Err(e) => {
+                    println!("  ✗ 認証情報ファイルの読み込みに失敗しました: {}", e);
+                    return Err(e);
+                }
+            }
         }
     };
 

@@ -16,13 +16,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@stable
-      - name: 認証情報の設定
+      - name: 認証情報の設定（mainブランチのみ）
+        if: github.ref == 'refs/heads/main'
         run: |
           echo "$GOOGLE_CRED" > google-credential.json
+        env:
+          GOOGLE_CRED: ${{ secrets.GOOGLE_CRED }}
       - name: 単体テストの実行
+        if: github.ref == 'refs/heads/main'
         run: cargo test --lib --verbose
         env:
           GOOGLE_CRED: ${{ secrets.GOOGLE_CRED }}
+      - name: 認証なしでの単体テスト実行（main以外のブランチ）
+        if: github.ref != 'refs/heads/main'
+        run: cargo test --lib --verbose
 
   lint:
     name: コード品質チェック
