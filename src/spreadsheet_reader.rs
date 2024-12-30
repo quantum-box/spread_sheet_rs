@@ -28,11 +28,32 @@ impl SpreadsheetReader {
     /// 指定範囲の読み込み
     pub async fn read_range(
         &self,
-        _spreadsheet_id: &str,
-        _range: &str,
+        spreadsheet_id: &str,
+        range: &str,
     ) -> Result<Response<String>, Error> {
-        // TODO: 指定範囲を読み込むAPI呼び出し
-        Ok(Response::new_success("DummyRangeData".to_string()))
+        // Google Sheets API V4のエンドポイントを構築
+        let url = format!(
+            "https://sheets.googleapis.com/v4/spreadsheets/{}/values/{}",
+            spreadsheet_id, range
+        );
+
+        // APIリクエストを実行
+        match self.client.get(&url).await {
+            Ok(response) => {
+                if response.is_success {
+                    if let Some(data) = response.data {
+                        Ok(Response::new_success(data))
+                    } else {
+                        Ok(Response::new_error("No data received"))
+                    }
+                } else {
+                    Ok(Response::new_error(
+                        &response.error.unwrap_or_else(|| "Unknown error".to_string())
+                    ))
+                }
+            }
+            Err(e) => Err(e),
+        }
     }
 }
 
