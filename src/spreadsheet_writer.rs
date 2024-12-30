@@ -1,3 +1,4 @@
+// SpreadsheetWriter provides functionality to write data to Google Sheets
 use crate::error::Error;
 use crate::response::Response;
 use crate::sheets_client::SheetsClient;
