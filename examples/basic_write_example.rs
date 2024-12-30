@@ -1,4 +1,4 @@
-use spread_sheet_rs::{SheetsClient, SpreadsheetWriter};
+use spread_sheet::{SheetsClient, SpreadsheetWriter};
 
 fn main() {
     // 認証情報のセットアップは本来ここに必要
