@@ -16,8 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@stable
+      - name: 認証情報の設定
+        run: |
+          echo "$GOOGLE_CRED" > google-credential.json
       - name: 単体テストの実行
         run: cargo test --lib --verbose
+        env:
+          GOOGLE_CRED: ${{ secrets.GOOGLE_CRED }}
 
   lint:
     name: コード品質チェック
