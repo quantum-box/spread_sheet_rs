@@ -7,9 +7,13 @@ fn main() {
     let client = SheetsClient::new(Authenticator::new(Some(cred)));
     let writer = SpreadsheetWriter::new(client);
 
-    // テスト用スプレッドシートのID
+    // テスト用スプレッドシートの情報
+    // ファイル名: spread_sheet_rs
+    // シート名: シート1, Query Result Dec 13 2024 (1)
     let sheet_id = "1OU4eEeDargcZTPaW7O5FNYE_vyrUQRysGCVYzAiOChQ";
-    match writer.write_cell(sheet_id, "A1", "Hello from writer!") {
+
+    // シート1のA1セルに書き込み
+    match writer.write_cell(sheet_id, "シート1!A1", "Hello from writer!") {
         Ok(response) => println!("書き込み成功: {:?}", response.data),
         Err(e) => eprintln!("エラーが発生しました: {:?}", e),
     }
