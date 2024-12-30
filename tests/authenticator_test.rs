@@ -1,4 +1,4 @@
-use spread_sheet_rs::{Authenticator, Error};
+use spread_sheet::{Authenticator, Error};
 
 #[test]
 fn test_api_key_success() {

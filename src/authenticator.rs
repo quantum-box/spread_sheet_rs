@@ -118,15 +118,3 @@ mod tests {
         }
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_new_authenticator() {
-        let auth = Authenticator::new(Some("test_key".to_string()));
-        assert!(auth.get_api_key().is_ok());
-        assert!(!auth.has_service_account());
-    }
-}
