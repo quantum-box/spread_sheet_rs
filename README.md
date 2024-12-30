@@ -289,12 +289,12 @@ SheetsClient --> [Sheets API] : interacts with
 - 📝 基本的な読み込みExample
 
 ### PR#4: 書き込み機能の実装
-- 📝 `SpreadsheetWriter`の実装
+- ✅ `SpreadsheetWriter`の実装
   - 単一セルの書き込み
   - 範囲指定での書き込み
   - データ型変換の実装
-- 📝 書き込み機能の単体テスト
-- 📝 基本的な書き込みExample
+- ✅ 書き込み機能の単体テスト
+- ✅ 基本的な書き込みExample
 
 ### PR#5: 高度な操作機能
 - 📝 シート管理機能の実装
