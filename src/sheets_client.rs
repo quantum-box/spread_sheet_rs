@@ -27,9 +27,10 @@ impl SheetsClient {
                 .map_err(|e| Error::ApiError(format!("Invalid token format: {}", e)))?,
         );
 
+        // Discovery APIエンドポイントを使用して疎通確認
         let response = self
             .client
-            .get(SHEETS_API_BASE)
+            .get("https://sheets.googleapis.com/$discovery/rest?version=v4")
             .headers(headers)
             .send()
             .await
