@@ -1,8 +1,9 @@
-mod authenticator;
-mod error;
-mod response;
-mod sheets_client;
+pub mod authenticator;
+pub mod error;
+pub mod response;
+pub mod sheets_client;
 
+// Re-export commonly used types
 pub use authenticator::Authenticator;
 pub use error::Error;
 pub use response::Response;
