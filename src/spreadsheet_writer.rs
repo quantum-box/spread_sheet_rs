@@ -14,7 +14,7 @@ impl SpreadsheetWriter {
     }
 
     /// 単一セルへの書き込み例
-    pub fn write_cell(
+    pub async fn write_cell(
         &self,
         _sheet_id: &str,
         range: &str,
@@ -30,7 +30,7 @@ impl SpreadsheetWriter {
     }
 
     /// 範囲指定での書き込み例
-    pub fn write_range(
+    pub async fn write_range(
         &self,
         _sheet_id: &str,
         range: &str,
