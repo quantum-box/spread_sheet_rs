@@ -2,8 +2,12 @@ use spread_sheet::{Authenticator, SheetsClient, SpreadsheetWriter};
 use std::env;
 
 fn main() {
-    // Google Sheets APIの認証情報を環境変数から取得
-    let cred = env::var("GOOGLE_SA_SHEET_CRED").expect("GOOGLE_SA_SHEET_CRED must be set");
+    // Google Sheets APIの認証情報を環境変数またはファイルから取得
+    let cred = env::var("GOOGLE_CRED").unwrap_or_else(|_| {
+        // 環境変数が設定されていない場合、ローカルファイルから読み込む
+        std::fs::read_to_string("google-credential.json")
+            .expect("Failed to read local google-credential.json")
+    });
     let client = SheetsClient::new(Authenticator::new(Some(cred)));
     let writer = SpreadsheetWriter::new(client);
 

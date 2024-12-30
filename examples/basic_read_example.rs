@@ -3,8 +3,13 @@ use spread_sheet::{Authenticator, Error, Response, SheetsClient, SpreadsheetRead
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 認証情報の設定
-    // Note: 実際の使用時はGOOGLE_SA_SHEET_CREDなどの環境変数から認証情報を取得します
-    let auth = Authenticator::new(Some("your_api_key".to_string()));
+    // 環境変数GOOGLE_CREDまたはローカルファイルから認証情報を取得
+    let cred = std::env::var("GOOGLE_CRED").unwrap_or_else(|_| {
+        // 環境変数が設定されていない場合、ローカルファイルから読み込む
+        std::fs::read_to_string("google-credential.json")
+            .expect("Failed to read local google-credential.json")
+    });
+    let auth = Authenticator::new(Some(cred));
     let client = SheetsClient::new(auth);
     let reader = SpreadsheetReader::new(client);
 
