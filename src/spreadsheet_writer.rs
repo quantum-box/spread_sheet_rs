@@ -3,6 +3,7 @@ use crate::response::Response;
 use crate::sheets_client::SheetsClient;
 
 pub struct SpreadsheetWriter {
+    #[allow(dead_code)]
     client: SheetsClient,
 }
 
@@ -14,7 +15,7 @@ impl SpreadsheetWriter {
     /// 単一セルへの書き込み例
     pub fn write_cell(
         &self,
-        sheet_id: &str,
+        _sheet_id: &str,
         range: &str,
         value: &str,
     ) -> Result<Response<String>, Error> {
@@ -30,7 +31,7 @@ impl SpreadsheetWriter {
     /// 範囲指定での書き込み例
     pub fn write_range(
         &self,
-        sheet_id: &str,
+        _sheet_id: &str,
         range: &str,
         values: Vec<Vec<String>>,
     ) -> Result<Response<String>, Error> {

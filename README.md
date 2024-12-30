@@ -10,8 +10,9 @@
 1. **`SheetsClient`**: Google Sheets APIとの通信を管理するメインクライアント。認証情報の管理、APIリクエストの送信、レスポンスの処理を行います。
 2. **`Authenticator`**: Google Sheets APIへの認証を処理するコンポーネント。APIキーまたはOAuth 2.0フローをサポートします。
 3. **`SpreadsheetReader`**: 特定のスプレッドシートからデータを読み取る機能を提供します。シートの指定、範囲の指定、データの取得を行います。
-4. **`Response`**: APIからのレスポンスを表現する構造体。成功または失敗の状態、データ、エラー情報などを持ちます。
-5. **`Error`**: SDK内で発生する可能性のあるエラーを定義するenum。
+4. **`SpreadsheetWriter`**: スプレッドシートへのデータ書き込み機能を提供します。単一セルおよび範囲指定での書き込みをサポートします。
+5. **`Response`**: APIからのレスポンスを表現する構造体。成功または失敗の状態、データ、エラー情報などを持ちます。
+6. **`Error`**: SDK内で発生する可能性のあるエラーを定義するenum。
 
 ### アーキテクチャ図
 
@@ -22,6 +23,7 @@ package "SDK" {
   [SheetsClient]
   [Authenticator]
   [SpreadsheetReader]
+  [SpreadsheetWriter]
   [Response]
   [Error]
 }
@@ -32,8 +34,11 @@ package "Google Sheets API" {
 
 SheetsClient --> Authenticator : uses
 SheetsClient --> SpreadsheetReader : uses
+SheetsClient --> SpreadsheetWriter : uses
 SpreadsheetReader --> Response : returns
 SpreadsheetReader --> Error : returns
+SpreadsheetWriter --> Response : returns
+SpreadsheetWriter --> Error : returns
 SheetsClient --> Response : returns
 SheetsClient --> Error : returns
 SheetsClient --> [Sheets API] : interacts with
@@ -67,6 +72,15 @@ SheetsClient --> [Sheets API] : interacts with
     - 読み取るセルの範囲を指定できます。
     - 取得したデータを構造化された形式で返します。
 
+#### `SpreadsheetWriter`
+
+- **責務**: スプレッドシートにデータを書き込みます。
+- **機能**:
+    - 単一セルへの書き込み機能を提供します。
+    - 範囲を指定して複数セルへの一括書き込みが可能です。
+    - 書き込み結果を`Response`型で返します。
+    - エラーハンドリングとリトライロジックをサポートします。
+
 #### `Response`
 
 - **責務**: API呼び出しの結果を表現します。
@@ -94,9 +108,9 @@ SheetsClient --> [Sheets API] : interacts with
 
 ### 今後の展開
 
-- 書き込み機能の追加
 - より複雑なクエリのサポート
 - バッチ処理のサポート
+- フォーマット設定機能の追加
 
 ## 実装タスク
 
