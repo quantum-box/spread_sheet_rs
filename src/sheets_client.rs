@@ -11,7 +11,7 @@ impl SheetsClient {
     pub fn new(authenticator: Authenticator) -> Self {
         Self { authenticator }
     }
-    
+
     pub fn ping_api(&self) -> Result<String, Error> {
         // TODO: HTTPクライアント実装
         // ひとまずダミー実装を返す
@@ -23,7 +23,7 @@ impl SheetsClient {
 mod tests {
     use super::*;
     use crate::Authenticator;
-    
+
     #[test]
     fn test_ping_api_ok() {
         let auth = Authenticator::new(Some("test_key".to_string()));

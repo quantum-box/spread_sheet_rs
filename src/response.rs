@@ -14,7 +14,7 @@ impl<T> Response<T> {
             error: None,
         }
     }
-    
+
     pub fn new_error(msg: &str) -> Self {
         Self {
             is_success: false,
