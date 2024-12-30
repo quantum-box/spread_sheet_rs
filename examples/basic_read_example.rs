@@ -1,4 +1,4 @@
-use spread_sheet_rs::{Authenticator, Error, Response, SheetsClient, SpreadsheetReader};
+use spread_sheet::{Authenticator, Error, Response, SheetsClient, SpreadsheetReader};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
