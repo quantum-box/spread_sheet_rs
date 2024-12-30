@@ -23,3 +23,23 @@ impl<T> Response<T> {
         }
     }
 }
+
+impl<T: std::fmt::Display> std::fmt::Display for Response<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match (&self.data, &self.error) {
+            (Some(data), _) => write!(f, "{}", data),
+            (None, Some(error)) => write!(f, "エラー: {}", error),
+            (None, None) => write!(f, "レスポンスにデータがありません"),
+        }
+    }
+}
+
+impl<T: std::fmt::Debug> std::fmt::Debug for Response<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Response")
+            .field("is_success", &self.is_success)
+            .field("data", &self.data)
+            .field("error", &self.error)
+            .finish()
+    }
+}
