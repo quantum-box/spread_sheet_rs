@@ -1,4 +1,4 @@
-use spread_sheet::{Authenticator, SheetsClient, SpreadsheetWriter, SpreadsheetReader};
+use spread_sheet::{Authenticator, SheetsClient, SpreadsheetReader, SpreadsheetWriter};
 use std::env;
 
 #[tokio::main]
@@ -20,11 +20,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // シート1のA1セルに書き込み
     println!("シート1のA1セルに書き込みを実行中...");
-    match writer.write_cell(sheet_id, "シート1!A1", "Hello from writer!").await {
+    match writer
+        .write_cell(sheet_id, "シート1!A1", "Hello from writer!")
+        .await
+    {
         Ok(response) => {
             if response.is_success {
                 println!("書き込み成功: {:?}", response.data);
-                
                 // 書き込んだデータを読み込んで確認
                 println!("\n書き込んだデータを確認中...");
                 match reader.read_range(sheet_id, "シート1!A1").await {

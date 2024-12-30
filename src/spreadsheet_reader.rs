@@ -48,7 +48,9 @@ impl SpreadsheetReader {
                     }
                 } else {
                     Ok(Response::new_error(
-                        &response.error.unwrap_or_else(|| "Unknown error".to_string())
+                        &response
+                            .error
+                            .unwrap_or_else(|| "Unknown error".to_string()),
                     ))
                 }
             }
