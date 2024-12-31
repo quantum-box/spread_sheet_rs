@@ -1,6 +1,7 @@
 use chrono::Local;
 use spread_sheet::{
-    Authenticator, SheetsClient, SpreadsheetReader, SpreadsheetWriter, ValueInputOption,
+    Authenticator, SheetsClient, SpreadsheetReader, SpreadsheetWriter,
+    spreadsheet_writer::ValueInputOption,
 };
 use std::env;
 
