@@ -26,6 +26,7 @@ struct ValueRange {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 struct UpdateValuesResponse {
     spreadsheet_id: String,
     updates: Option<UpdateResult>,
