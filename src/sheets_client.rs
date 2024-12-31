@@ -57,6 +57,41 @@ impl SheetsClient {
             },
         })
     }
+
+    /// 指定されたURLにPUTリクエストを送信し、認証付きでデータを更新
+    pub async fn put<T: serde::Serialize>(&self, url: &str, body: &T) -> Result<String, Error> {
+        let token = self.authenticator.get_token().await?;
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            AUTHORIZATION,
+            HeaderValue::from_str(&format!("Bearer {}", token))
+                .map_err(|e| Error::ApiError(format!("Invalid token format: {}", e)))?,
+        );
+
+        let response = self
+            .client
+            .put(url)
+            .headers(headers)
+            .json(body)
+            .send()
+            .await
+            .map_err(|e| Error::NetworkError(format!("Failed to send request: {}", e)))?;
+
+        let status = response.status();
+        let body = response
+            .text()
+            .await
+            .map_err(|e| Error::NetworkError(format!("Failed to read response body: {}", e)))?;
+
+        if status.is_success() {
+            Ok(body)
+        } else {
+            Err(Error::ApiError(format!(
+                "HTTP Error: {} - {}",
+                status, body
+            )))
+        }
+    }
 }
 
 #[cfg(test)]
