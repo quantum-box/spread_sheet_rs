@@ -1,10 +1,8 @@
 #[cfg(test)]
 mod writer_test {
     use spread_sheet::{
+        Authenticator, SheetsClient, SpreadsheetWriter,
         spreadsheet_writer::ValueInputOption,
-        Authenticator,
-        SheetsClient,
-        SpreadsheetWriter,
     };
 
     #[tokio::test]

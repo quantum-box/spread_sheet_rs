@@ -1,5 +1,6 @@
 use spread_sheet::{Authenticator, Error};
 
+#[cfg(test)]
 mod test_authenticator {
     use super::*;
 
