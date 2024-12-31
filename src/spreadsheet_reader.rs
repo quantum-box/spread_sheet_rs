@@ -1,6 +1,18 @@
 use crate::error::Error;
 use crate::response::Response;
 use crate::SheetsClient;
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+#[allow(dead_code)]
+struct ValueRange {
+    range: String,
+    #[serde(default)]
+    #[serde(rename = "majorDimension")]
+    major_dimension: String,
+    #[serde(default)]
+    values: Vec<Vec<String>>,
+}
 
 /// SpreadsheetReader: シートからデータを読み取るコンポーネント
 #[allow(dead_code)]
@@ -20,7 +32,7 @@ impl SpreadsheetReader {
         &self,
         spreadsheet_id: &str,
         sheet_name: &str,
-    ) -> Result<Response<String>, Error> {
+    ) -> Result<Response<Vec<Vec<String>>>, Error> {
         // Google Sheets API V4のエンドポイントを構築
         // シート全体を読み込むために大きな範囲を指定（A1:ZZ1000）
         let range = format!("{}!A1:ZZ1000", sheet_name);
@@ -36,7 +48,14 @@ impl SpreadsheetReader {
             Ok(response) => {
                 if response.is_success {
                     if let Some(data) = response.data {
-                        Ok(Response::new_success(data))
+                        // JSONレスポンスをパース
+                        match serde_json::from_str::<ValueRange>(&data) {
+                            Ok(value_range) => Ok(Response::new_success(value_range.values)),
+                            Err(e) => Ok(Response::new_error(&format!(
+                                "Failed to parse response: {}",
+                                e
+                            ))),
+                        }
                     } else {
                         Ok(Response::new_error("No data received"))
                     }
@@ -57,7 +76,7 @@ impl SpreadsheetReader {
         &self,
         spreadsheet_id: &str,
         range: &str,
-    ) -> Result<Response<String>, Error> {
+    ) -> Result<Response<Vec<Vec<String>>>, Error> {
         // Google Sheets API V4のエンドポイントを構築
         // URLエンコードを行う
         let encoded_range = urlencoding::encode(range);
@@ -71,7 +90,14 @@ impl SpreadsheetReader {
             Ok(response) => {
                 if response.is_success {
                     if let Some(data) = response.data {
-                        Ok(Response::new_success(data))
+                        // JSONレスポンスをパース
+                        match serde_json::from_str::<ValueRange>(&data) {
+                            Ok(value_range) => Ok(Response::new_success(value_range.values)),
+                            Err(e) => Ok(Response::new_error(&format!(
+                                "Failed to parse response: {}",
+                                e
+                            ))),
+                        }
                     } else {
                         Ok(Response::new_error("No data received"))
                     }

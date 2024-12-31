@@ -11,7 +11,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // スプレッドシートIDとシート名を指定
     let spreadsheet_id = "1OU4eEeDargcZTPaW7O5FNYE_vyrUQRysGCVYzAiOChQ";
-    let sheet_name = "シート1";
+    let sheet_name = "read_sheet"; // シート名を"read_sheet"に変更
 
     println!("シート全体の読み込みを試行中...");
     match reader.read_entire_sheet(spreadsheet_id, sheet_name).await {
@@ -19,23 +19,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             if response.is_success {
                 println!("データの読み込みに成功しました:");
                 if let Some(data) = response.data {
-                    println!("{}", data);
-                }
-            } else if let Some(error) = response.error {
-                println!("エラーが発生しました: {}", error);
-            }
-        }
-        Err(e) => println!("エラーが発生しました: {}", e),
-    }
-
-    println!("\n特定範囲の読み込みを試行中...");
-    let range = "シート1!A1:B10"; // 例: A1からB10までの範囲
-    match reader.read_range(spreadsheet_id, range).await {
-        Ok(response) => {
-            if response.is_success {
-                println!("データの読み込みに成功しました:");
-                if let Some(data) = response.data {
-                    println!("{}", data);
+                    // データを表形式で表示
+                    println!("----------------------------------------");
+                    for (row_idx, row) in data.iter().enumerate() {
+                        print!("行 {:2}: ", row_idx + 1);
+                        for cell in row {
+                            print!("{:<15}", cell); // 15文字幅で左寄せ
+                        }
+                        println!(); // 改行
+                    }
+                    println!("----------------------------------------");
+                } else {
+                    println!("データが空です");
                 }
             } else if let Some(error) = response.error {
                 println!("エラーが発生しました: {}", error);
