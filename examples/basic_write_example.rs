@@ -1,5 +1,11 @@
 use chrono::Local;
-use spread_sheet::{Authenticator, SheetsClient, SpreadsheetReader, SpreadsheetWriter, spreadsheet_writer::ValueInputOption};
+use spread_sheet::{
+    spreadsheet_writer::ValueInputOption,
+    Authenticator,
+    SheetsClient,
+    SpreadsheetReader,
+    SpreadsheetWriter,
+};
 use std::env;
 
 #[tokio::main]

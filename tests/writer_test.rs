@@ -1,6 +1,11 @@
 #[cfg(test)]
 mod writer_test {
-    use spread_sheet::{Authenticator, SheetsClient, SpreadsheetWriter, spreadsheet_writer::ValueInputOption};
+    use spread_sheet::{
+        spreadsheet_writer::ValueInputOption,
+        Authenticator,
+        SheetsClient,
+        SpreadsheetWriter,
+    };
 
     #[tokio::test]
     async fn test_write_cell() {
