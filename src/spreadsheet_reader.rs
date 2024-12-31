@@ -4,10 +4,12 @@ use crate::SheetsClient;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
+#[allow(dead_code)]
 struct ValueRange {
     range: String,
     #[serde(default)]
-    majorDimension: String,
+    #[serde(rename = "majorDimension")]
+    major_dimension: String,
     #[serde(default)]
     values: Vec<Vec<String>>,
 }
