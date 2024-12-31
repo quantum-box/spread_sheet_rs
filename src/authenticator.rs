@@ -3,7 +3,7 @@ use serde::Deserialize;
 use std::path::Path;
 use yup_oauth2::{ServiceAccountAuthenticator, ServiceAccountKey};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct ServiceAccountCreds {
     #[serde(rename = "type")]
     auth_type: String,
@@ -18,6 +18,7 @@ pub struct ServiceAccountCreds {
     client_x509_cert_url: String,
 }
 
+#[derive(Clone)]
 pub struct Authenticator {
     api_key: Option<String>,
     service_account: Option<ServiceAccountCreds>,

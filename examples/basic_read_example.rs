@@ -1,16 +1,17 @@
-use spread_sheet::{Authenticator, Error, Response, SheetsClient, SpreadsheetReader};
+use spread_sheet::{Authenticator, SheetsClient, SpreadsheetReader};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 認証情報の設定
-    // Note: 実際の使用時はGOOGLE_SA_SHEET_CREDなどの環境変数から認証情報を取得します
-    let auth = Authenticator::new(Some("your_api_key".to_string()));
+    // サービスアカウント認証情報を使用
+    let auth = Authenticator::from_service_account_file("google-credential.json")
+        .expect("Failed to create authenticator from service account file");
     let client = SheetsClient::new(auth);
     let reader = SpreadsheetReader::new(client);
 
     // スプレッドシートIDとシート名を指定
-    let spreadsheet_id = "your_spreadsheet_id";
-    let sheet_name = "Sheet1";
+    let spreadsheet_id = "1OU4eEeDargcZTPaW7O5FNYE_vyrUQRysGCVYzAiOChQ";
+    let sheet_name = "シート1";
 
     println!("シート全体の読み込みを試行中...");
     match reader.read_entire_sheet(spreadsheet_id, sheet_name).await {
@@ -28,7 +29,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     println!("\n特定範囲の読み込みを試行中...");
-    let range = "Sheet1!A1:B10"; // 例: A1からB10までの範囲
+    let range = "シート1!A1:B10"; // 例: A1からB10までの範囲
     match reader.read_range(spreadsheet_id, range).await {
         Ok(response) => {
             if response.is_success {

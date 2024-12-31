@@ -18,21 +18,73 @@ impl SpreadsheetReader {
     /// シート全体の読み込み
     pub async fn read_entire_sheet(
         &self,
-        _spreadsheet_id: &str,
-        _sheet_name: &str,
+        spreadsheet_id: &str,
+        sheet_name: &str,
     ) -> Result<Response<String>, Error> {
-        // TODO: シート全体を読み込むAPI呼び出し
-        Ok(Response::new_success("DummyData".to_string()))
+        // Google Sheets API V4のエンドポイントを構築
+        // シート全体を読み込むために大きな範囲を指定（A1:ZZ1000）
+        let range = format!("{}!A1:ZZ1000", sheet_name);
+        // URLエンコードを行う
+        let encoded_range = urlencoding::encode(&range);
+        let url = format!(
+            "https://sheets.googleapis.com/v4/spreadsheets/{}/values/{}",
+            spreadsheet_id, encoded_range
+        );
+
+        // APIリクエストを実行
+        match self.client.get(&url).await {
+            Ok(response) => {
+                if response.is_success {
+                    if let Some(data) = response.data {
+                        Ok(Response::new_success(data))
+                    } else {
+                        Ok(Response::new_error("No data received"))
+                    }
+                } else {
+                    Ok(Response::new_error(
+                        &response
+                            .error
+                            .unwrap_or_else(|| "Unknown error".to_string()),
+                    ))
+                }
+            }
+            Err(e) => Err(e),
+        }
     }
 
     /// 指定範囲の読み込み
     pub async fn read_range(
         &self,
-        _spreadsheet_id: &str,
-        _range: &str,
+        spreadsheet_id: &str,
+        range: &str,
     ) -> Result<Response<String>, Error> {
-        // TODO: 指定範囲を読み込むAPI呼び出し
-        Ok(Response::new_success("DummyRangeData".to_string()))
+        // Google Sheets API V4のエンドポイントを構築
+        // URLエンコードを行う
+        let encoded_range = urlencoding::encode(range);
+        let url = format!(
+            "https://sheets.googleapis.com/v4/spreadsheets/{}/values/{}",
+            spreadsheet_id, encoded_range
+        );
+
+        // APIリクエストを実行
+        match self.client.get(&url).await {
+            Ok(response) => {
+                if response.is_success {
+                    if let Some(data) = response.data {
+                        Ok(Response::new_success(data))
+                    } else {
+                        Ok(Response::new_error("No data received"))
+                    }
+                } else {
+                    Ok(Response::new_error(
+                        &response
+                            .error
+                            .unwrap_or_else(|| "Unknown error".to_string()),
+                    ))
+                }
+            }
+            Err(e) => Err(e),
+        }
     }
 }
 

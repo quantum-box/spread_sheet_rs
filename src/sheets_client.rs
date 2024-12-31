@@ -4,6 +4,7 @@ use crate::response::Response;
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION};
 
 /// SheetsClient: Google Sheets APIへのHTTPリクエストを管理
+#[derive(Clone)]
 pub struct SheetsClient {
     authenticator: Authenticator,
     client: reqwest::Client,
